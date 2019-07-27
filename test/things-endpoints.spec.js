@@ -53,19 +53,22 @@ describe('Things Endpoints', function () {
           )
         )
         
+        let t = 4;
         console.log('\n\n----------------------------------------');
-        console.log('Thing 1 EXPECTED REVIEW COUNT', expectedThings[3].number_of_reviews)
+        console.log(`Thing ${t} EXPECTED REVIEW COUNT`, expectedThings[t-1].number_of_reviews)
         console.log('----------------------------------------\n\n');
 
         return supertest(app)
           .get('/api/things')
           .then(res => {
             console.log('\n\n----------------------------------------');
-            console.log('Thing 1 ACTUAL REVIEW COUNT', res.body[3].number_of_reviews)
+            console.log(`Thing ${t} ACTUAL REVIEW COUNT  `, res.body[t-1].number_of_reviews)
             console.log('----------------------------------------\n\n');
             return res
           })
-          .expect(200, expectedThings)
+          // TURN THIS EXPECT OFF TEMPORARILY
+          // TO DO THE ABOVE CONSOLE LOGS
+          //.expect(200, expectedThings)
       })
     })
 
