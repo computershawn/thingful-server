@@ -5,11 +5,7 @@ const helpers = require('./test-helpers')
 describe('Things Endpoints', function () {
   let db
 
-  const {
-    testUsers,
-    testThings,
-    testReviews
-  } = helpers.makeThingsFixtures()
+  const { testUsers, testThings, testReviews } = helpers.makeThingsFixtures()
 
   before('make knex instance', () => {
     db = knex({
@@ -96,39 +92,6 @@ describe('Things Endpoints', function () {
           .get(`/api/things/${thingId}`)
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(404, { error: `Thing doesn't exist` })
-      })
-    })
-
-    describe(`Protected endpoints`, () => {
-      beforeEach('insert things', () =>
-        helpers.seedThingsTables(
-          db,
-          testUsers,
-          testThings,
-          testReviews,
-        )
-      )
-
-      describe(`GET /api/things/:thing_id`, () => {
-        it(`responds with 401 'Missing basic token' when no basic token`, () => {
-          return supertest(app)
-            .get(`/api/things/1`)
-            .expect(401, { error: `Missing basic token` })
-        })
-        it(`responds 401 'Unauthorized request' when no credentials in token`, () => {
-          const userNoCreds = { user_name: '', password: '' }
-          return supertest(app)
-            .get(`/api/things/1`)
-            .set('Authorization', helpers.makeAuthHeader(userNoCreds))
-            .expect(401, { error: `Unauthorized request` })
-        })
-        it(`responds 401 'Unauthorized request' when invalid user`, () => {
-          const userInvalidCreds = { user_name: 'user-not', password: 'existy' }
-          return supertest(app)
-            .get(`/api/things/1`)
-            .set('Authorization', helpers.makeAuthHeader(userInvalidCreds))
-            .expect(401, { error: `Unauthorized request` })
-        })
       })
     })
 
