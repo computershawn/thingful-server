@@ -68,7 +68,11 @@ const ThingsService = {
     // only accepts arrays of objects, and we want to use a single
     // object.
     const thingData = thingTree.grow([ thing ]).getData()[0]
-
+    //console.log(thingData.number_of_reviews)
+    // console.log(thingData.average_review_rating)
+    // console.log('THINGDATA -------------------------------------------');
+    // console.log(thingData)
+    // console.log('/THINGDATA ------------------------------------------');
     return {
       id: thingData.id,
       title: xss(thingData.title),

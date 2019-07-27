@@ -44,7 +44,7 @@ describe('Things Endpoints', function () {
         )
       )
 
-      it('responds with 200 and all of the things', () => {
+      it.only('responds with 200 and all of the things', () => {
         const expectedThings = testThings.map(thing =>
           helpers.makeExpectedThing(
             testUsers,
@@ -52,14 +52,25 @@ describe('Things Endpoints', function () {
             testReviews,
           )
         )
+        
+        console.log('\n\n----------------------------------------');
+        console.log('Thing 1 EXPECTED REVIEW COUNT', expectedThings[3].number_of_reviews)
+        console.log('----------------------------------------\n\n');
+
         return supertest(app)
           .get('/api/things')
+          .then(res => {
+            console.log('\n\n----------------------------------------');
+            console.log('Thing 1 ACTUAL REVIEW COUNT', res.body[3].number_of_reviews)
+            console.log('----------------------------------------\n\n');
+            return res
+          })
           .expect(200, expectedThings)
       })
     })
 
     context(`Given an XSS attack thing`, () => {
-      const testUser = helpers.makeUsersArray()[1]
+      const testUser = helpers.makeUsersArray()[0]
       const {
         maliciousThing,
         expectedThing,
@@ -88,7 +99,7 @@ describe('Things Endpoints', function () {
   describe(`GET /api/things/:thing_id`, () => {
     context(`Given no things`, () => {
       beforeEach(() =>
-        db.into('thingful_users').insert(testUsers)
+        helpers.seedUsers(db, testUsers)
       )
       it(`responds with 404`, () => {
         const thingId = 123456
@@ -189,7 +200,7 @@ describe('Things Endpoints', function () {
   describe(`GET /api/things/:thing_id/reviews`, () => {
     context(`Given no things`, () => {
       beforeEach(() =>
-        db.into('thingful_users').insert(testUsers)
+        helpers.seedUsers(db, testUsers)
       )
       it(`responds with 404`, () => {
         const thingId = 123456
@@ -201,7 +212,7 @@ describe('Things Endpoints', function () {
     })
 
     context('Given there are reviews for thing in the database', () => {
-      beforeEach('insert things', () =>
+      beforeEach('insert things', () => 
         helpers.seedThingsTables(
           db,
           testUsers,
