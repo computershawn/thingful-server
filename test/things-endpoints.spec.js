@@ -44,7 +44,7 @@ describe('Things Endpoints', function () {
         )
       )
 
-      it.only('responds with 200 and all of the things', () => {
+      it('responds with 200 and all of the things', () => {
         const expectedThings = testThings.map(thing =>
           helpers.makeExpectedThing(
             testUsers,
@@ -52,23 +52,9 @@ describe('Things Endpoints', function () {
             testReviews,
           )
         )
-        
-        let t = 4;
-        console.log('\n\n----------------------------------------');
-        console.log(`Thing ${t} EXPECTED REVIEW COUNT`, expectedThings[t-1].number_of_reviews)
-        console.log('----------------------------------------\n\n');
-
         return supertest(app)
           .get('/api/things')
-          .then(res => {
-            console.log('\n\n----------------------------------------');
-            console.log(`Thing ${t} ACTUAL REVIEW COUNT  `, res.body[t-1].number_of_reviews)
-            console.log('----------------------------------------\n\n');
-            return res
-          })
-          // TURN THIS EXPECT OFF TEMPORARILY
-          // TO DO THE ABOVE CONSOLE LOGS
-          //.expect(200, expectedThings)
+          .expect(200, expectedThings)
       })
     })
 
@@ -214,7 +200,7 @@ describe('Things Endpoints', function () {
       })
     })
 
-    context('Given there are reviews for thing in the database', () => {
+    context('Given there are reviews for thing in the database', () => {    
       beforeEach('insert things', () => 
         helpers.seedThingsTables(
           db,
@@ -222,7 +208,7 @@ describe('Things Endpoints', function () {
           testThings,
           testReviews,
         )
-      )
+      )    
 
       it('responds with 200 and the specified reviews', () => {
         const thingId = 1
