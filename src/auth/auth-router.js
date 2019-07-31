@@ -27,11 +27,13 @@ authRouter
 
         return AuthService.comparePasswords(loginUser.password, dbUser.password)
           .then(compareMatch => {
+            // If passwords don't match, send code 400
             if (!compareMatch)
               return res.status(400).json({
                 error: 'Incorrect user_name or password',
               })
 
+            // If passwords match, send the JWT in the response
             const sub = dbUser.user_name
             const payload = { user_id: dbUser.id }
             res.send({
